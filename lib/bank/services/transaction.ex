@@ -27,11 +27,12 @@ defmodule Bank.Services.Transaction do
   - `{:error, reason, step, results}`: Failed transaction with error details.
   """
   def call(%{"account_id" => account_id, "amount" => amount, "paymethod" => paymethod}) do
-    with {:ok, result} <- process_transaction(account_id, amount, paymethod) do
-      {:ok, result}
-    else
-      {:error, reason} -> {:error, reason, :validation}
-      {:error, reason, step, results} -> {:error, reason, step, results}
+    case process_transaction(account_id, amount, paymethod) do
+      {:ok, result} ->
+        {:ok, result}
+
+      {:error, reason, step, results} ->
+        {:error, reason, step, results}
     end
   end
 
